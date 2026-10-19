@@ -1177,8 +1177,8 @@ def main():
                         f"🌐 节点: <code>{used_node}</code>"
                     )
 
+                # 成功和跳过仅记录日志，不发送 Telegram 通知。
                 print(msg)
-                tg_send(msg, res.get("screenshot"))
                 break
 
             # 若账号密码错误，不再重试
@@ -1214,7 +1214,7 @@ def main():
             print(f"[冷却] 等待 {gap} 秒后处理下一个账号...")
             time.sleep(gap)
 
-    # 3. 汇总报告推送
+    # 3. 汇总始终记录日志，仅在存在失败账号时推送
     summary_msg = (
         f"📊 <b>Kata 服务器续期任务完成汇报</b>\n"
         f"━━━━━━━━━━━━━━━━━━\n"
@@ -1230,7 +1230,8 @@ def main():
     print("\n" + "=" * 65)
     print(summary_msg)
     print("=" * 65)
-    tg_send(summary_msg)
+    if failed_count > 0:
+        tg_send(summary_msg)
 
 
 if __name__ == "__main__":
